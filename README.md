@@ -4,9 +4,6 @@
 
 ![TeleMovo: PICO VR teleoperation with a dual-arm cloth simulation; IPPLab watermark](docs/assets/telemovo-hero.png)
 
-*AI-generated project illustration based on the simulation scene; not a photograph
-of a validated data-collection session.*
-
 TeleMovo is an experimental browser-based VR teleoperation interface for PICO,
 with immersive visualization, guided bimanual control, and Genesis simulation
 examples for Franka Panda and X5. Open a headset browser, enter VR, and move the

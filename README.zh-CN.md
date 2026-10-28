@@ -4,8 +4,6 @@
 
 ![TeleMovo：PICO 双手柄遥操与双臂布料仿真，带 IPPLab 水印](docs/assets/telemovo-hero.png)
 
-*封面为参考现有仿真场景制作的 AI 项目示意图，不是已验证采集过程的实拍照片。*
-
 TeleMovo 将 PICO 手柄、沉浸式场景和双臂仿真连接起来。当前提供 Genesis PBD
 布料场景、双 Franka Panda 和双 X5 示例，目标是让操作者在浏览器中进入场景，
 理解手柄方向，并逐步完成双臂操作。
