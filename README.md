@@ -1,119 +1,69 @@
 # TeleMovo
 
-**WebXR Robot Teleoperation for PICO**
+**Immersive Robot Teleoperation for Simulation Data Collection**
 
 ![TeleMovo: PICO VR teleoperation with a dual-arm cloth simulation; IPPLab watermark](docs/assets/telemovo-hero.png)
 
-TeleMovo is an experimental browser-based VR teleoperation interface for PICO,
-with immersive visualization, guided bimanual control, and Genesis simulation
-examples for Franka Panda and X5. Open a headset browser, enter VR, and move the
-two simulated arms with your controllers.
+TeleMovo connects PICO VR interaction with robot simulation through WebXR,
+providing an extensible teleoperation foundation for bimanual manipulation,
+deformable-object interaction, and demonstration data-collection research.
 
-We are building toward a simulation data-collection platform: start with immersive
-teleoperation, then contribute reproducible recording, review and dataset export.
-The current release provides the teleoperation foundation; episode recording and
-dataset export remain future work.
+The current integration uses Genesis, with Franka Panda and X5 dual-arm examples,
+immersive visualization, controller-based teleoperation, and visual operation guides.
 
-[中文](README.zh-CN.md) · [Setup](docs/setup.zh-CN.md) · [Controls](docs/operation.zh-CN.md) · [Architecture](docs/architecture.md) · [Results and limitations](docs/results.zh-CN.md)
+[中文](README.zh-CN.md) · [Getting started](docs/setup.zh-CN.md) · [Architecture](docs/architecture.md) · [Contributing](CONTRIBUTING.md)
 
-The current backend supports Genesis PBD cloth. The viewer renders the scene on
-the headset; the server sends geometry and live state rather than a CloudXR
-video stream. Adding more robots, simulators and headsets is a project direction,
-not a claim of existing compatibility.
+## Key features
 
-## What is included
+- **Immersive interaction** — stereoscopic visualization, head tracking, and dual-controller input through the PICO browser.
+- **Bimanual control** — relative pose mapping, gripper control, and visual guidance for coordinated manipulation.
+- **Deformable simulation** — cloth interaction scenes built on Genesis PBD.
+- **Configurable deployment** — local execution or remote simulation with an independent HTTPS gateway.
+- **Extensible foundation** — robot profiles and documented interfaces for further integration.
 
-- PICO WebXR immersive stereo viewing and head tracking.
-- Two controller inputs, relative motion with Grip clutching, and Trigger grippers.
-- Table-aligned movement, optional wrist rotation, colored TCP guides and practice instructions.
-- Franka Panda and X5 profiles, independent simulation/gateway processes, optional SSH forwarding.
-- Pinned, isolated Genesis contact patch, asset provenance, material checks and benchmarking tools.
-- CPU tests and GitHub Actions checks; no headset or GPU required for these checks.
+## Getting started
 
-## Project status
+1. Follow the [setup guide](docs/setup.zh-CN.md) to prepare the environment and pinned Genesis integration.
+2. Prepare the robot and garment assets using the [asset guide](docs/assets.zh-CN.md).
+3. Launch the selected simulation and gateway, then open the gateway address in PICO.
 
-This is a research prototype. Actual headset trials demonstrated viewing and
-dual-arm control, but the operator still found it difficult to use. Reliable
-cloth pickup, release and folding have **not** been established. The X5 fixed-point
-grasp test failed. Simulator self-tests passing does not establish task success.
+See the [operation guide](docs/operation.zh-CN.md) for calibration and controls.
 
-The current launchers do not record demonstration episodes or export LeRobot
-datasets. Earlier Isaac/CloudXR and dataset-studio experiments are outside this
-repository. There is no real-robot driver here.
+## Roadmap
 
-## Quick start
+- Episode recording, success/failure annotation, and replay.
+- Dataset quality checks and LeRobot export.
+- Additional robot and simulator adapters.
+- Improved operator interaction and cloth-manipulation workflows.
 
-Prerequisites: Linux NVIDIA GPU machine with a compatible PyTorch/Genesis
-environment, PICO with a WebXR-capable browser, and a shared LAN. The historical
-validation used one RTX 5090 on an eight-GPU server. Gateway and simulation can
-also run on the same computer; this deployment has not been revalidated here.
+Recording and dataset export are planned extensions to the current teleoperation interface.
 
-1. Use the Genesis source commit in [patches/manifest.json](patches/manifest.json).
-   Install the selected GPU environment as described in the setup guide.
-2. Import the external robot and garment assets following [the asset guide](docs/assets.zh-CN.md).
-   Third-party model meshes are not distributed in this repository.
-3. Create the isolated contact package:
+## Contributing
 
-   ```bash
-   python3 -B scripts/apply_contact_patch.py --source /path/to/genesis-world/genesis
-   ```
+Help build TeleMovo with us. Contributions to interaction design, robot adapters,
+data workflows, documentation, and testing are welcome. First-time contributors
+can start with documentation, setup improvements, or CPU tests without VR hardware.
 
-4. Start the simulation with your existing environment:
-
-   ```bash
-   bash scripts/start-simulation.sh --robot franka --teleop --python /path/to/sim-env/bin/python
-   ```
-
-5. Start the gateway with a certificate trusted by the headset:
-
-   ```bash
-   bash scripts/start-gateway.sh --robot franka --bind YOUR_LAN_IP \
-     --cert /path/to/server.crt --key /path/to/server.key \
-     --python /path/to/gateway-env/bin/python
-   ```
-
-6. In PICO, visit `https://YOUR_LAN_IP:8444/?teleop=1`, enter VR with both Grips
-   released, then hold one Grip and make a small movement. Use `--robot x5` and
-   gateway port `8445` for X5. Each simulation exits after 1800 seconds by default;
-   change `--seconds` explicitly for a longer session.
-
-Use `--dry-run` on either launcher to inspect commands without starting anything.
-Remote simulation through SSH, HTTPS certificates and the read-only viewer are
-documented in [setup](docs/setup.zh-CN.md).
-
-## Build TeleMovo with us
-
-Contributions are welcome, including your first robotics contribution. Help make
-VR teleoperation easier to use and simulation demonstrations easier to reproduce.
-You do not need a PICO or a GPU to improve documentation, CPU tests or setup instructions.
-
-- **Interaction:** clearer controller mapping, clutching, wrist control and operator guidance.
-- **Adapters:** more robot profiles and simulation backends, with explicit validation.
-- **Data collection:** episode recording, success/failure labels, replay, quality checks and LeRobot export.
-- **Reproducibility:** asset preparation, installation fixes and measured headset performance.
-
-[Report a problem or propose an idea](https://github.com/codeofwhite/telemovo/issues/new)
+[Open an issue](https://github.com/codeofwhite/telemovo/issues/new)
 · [Browse issues](https://github.com/codeofwhite/telemovo/issues)
 · [Contribution guide](CONTRIBUTING.md)
 · [Pull requests](https://github.com/codeofwhite/telemovo/pulls)
 
-Small fixes, failed-test reports and honest operator feedback are valuable too.
-For a substantial change, open an issue first so we can agree on scope and validation.
+For substantial changes, open an issue to discuss the proposed scope and validation.
 
-## Development checks
+## Documentation
 
-```bash
-# Inside a development environment with requirements/test.txt installed:
-python3 -B scripts/check_project.py
-```
+| Guide | Contents |
+|---|---|
+| [Setup](docs/setup.zh-CN.md) | Environment, deployment, HTTPS, and launch commands |
+| [Assets](docs/assets.zh-CN.md) | Model preparation, provenance, and import |
+| [Operation](docs/operation.zh-CN.md) | Calibration, controls, and visual guidance |
+| [Architecture](docs/architecture.md) | Components, coordinate frames, and protocols |
+| [Verification](docs/verification.zh-CN.md) | Development checks and hardware validation |
+| [Experiments](docs/results.zh-CN.md) | Evaluation results and current validation scope |
+| [Troubleshooting](docs/troubleshooting.zh-CN.md) | Connection, interaction, and simulation diagnostics |
 
-These checks verify configuration, input validation, coordinate mapping and patch
-reproduction. They do not measure VR latency, GPU physics performance or cloth
-grasp success. See [verification](docs/verification.zh-CN.md).
+## License and attribution
 
-## Attribution and license status
-
-Independent community project; not an official PICO, Genesis or Franka release.
-See [third-party notices](THIRD_PARTY_NOTICES.md). The project's own open-source
-license has not yet been selected by the owner; source availability alone is not
-an open-source license grant. Select a license before a public open-source release.
+Project-wide license selection is pending. See [third-party notices](THIRD_PARTY_NOTICES.md)
+for component and asset provenance. TeleMovo is an independent community project.
