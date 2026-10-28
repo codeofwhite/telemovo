@@ -1,0 +1,111 @@
+{
+  "date": "2026-10-28",
+  "evidence_type": "historical local experiment results, not rerun during packaging",
+  "original_snapshot_commit": "74c41fd",
+  "self_tests": [
+    {
+      "robot": "franka",
+      "source_identifier": "genesis-study/outputs/teleop-20261028T123129Z/diagnostics.json",
+      "source_sha256": "9433acad3450dcc7530be9093c25fe0a48b4d2b53a3613aa404676749119149a",
+      "status": "passed",
+      "idle_rtf": 1.0111515468877912,
+      "orientation_lock": [
+        {
+          "phase": "left_orientation_lock",
+          "actual_rotation_rad": 1.5978415603967733e-06,
+          "target_rotation_change_rad": 0.0,
+          "absolute_tracking_error_rad": 0.010599963366985321,
+          "protocol": "fixed-controller baseline, then rotate controller 0.1 rad; existing absolute servo error reported separately"
+        },
+        {
+          "phase": "right_orientation_lock",
+          "actual_rotation_rad": 6.188906354509527e-06,
+          "target_rotation_change_rad": 0.0,
+          "absolute_tracking_error_rad": 0.010203328914940357,
+          "protocol": "fixed-controller baseline, then rotate controller 0.1 rad; existing absolute servo error reported separately"
+        }
+      ]
+    },
+    {
+      "robot": "x5",
+      "source_identifier": "genesis-x5/outputs/teleop-20261028T125602Z/diagnostics.json",
+      "source_sha256": "bbcb790099bef4b6b6693ee83b771ed33aa8ac096803e2a9aa58ced6a35909ca",
+      "status": "passed",
+      "idle_rtf": 0.98609857606713,
+      "orientation_lock": [
+        {
+          "phase": "left_orientation_lock",
+          "actual_rotation_rad": 0.0,
+          "target_rotation_change_rad": 0.0,
+          "absolute_tracking_error_rad": 0.0017301836051046848,
+          "protocol": "fixed-controller baseline, then rotate controller 0.1 rad; existing absolute servo error reported separately"
+        },
+        {
+          "phase": "right_orientation_lock",
+          "actual_rotation_rad": 3.506478662984591e-08,
+          "target_rotation_change_rad": 0.0,
+          "absolute_tracking_error_rad": 0.0016598632792010903,
+          "protocol": "fixed-controller baseline, then rotate controller 0.1 rad; existing absolute servo error reported separately"
+        }
+      ]
+    }
+  ],
+  "x5_grasp": {
+    "source_identifier": "genesis-x5/outputs/guided-platform40-grasp-20261028/result.json",
+    "source_sha256": "12847e437fae2d97088b8594258ae9db2ae0a7b584a03fcdda8618954b27d67f",
+    "status": "complete",
+    "gates": {
+      "idle": {
+        "passed": true,
+        "com_drift_m": 0.0009558393503539264,
+        "limit_m": 0.02
+      },
+      "slide": {
+        "passed": true,
+        "displacement_m": 0.002143620513379574,
+        "limit_m": 0.08
+      },
+      "reset": {
+        "passed": true,
+        "maximum_node_position_error_m": 0.0
+      },
+      "grasp": {
+        "passed": false,
+        "raised_nodes": 0,
+        "minimum_nodes": 30,
+        "fingers_at_lift": [
+          -2.647556698320841e-07,
+          7.867924978199881e-07
+        ]
+      },
+      "release": {
+        "passed": false,
+        "max_z_m": 0.91750568151474,
+        "finger_open_error_m": 8.456408977508545e-07
+      },
+      "strain": {
+        "passed": true,
+        "maximum_phase_p95": 1.0835999250411987,
+        "limit": 1.2
+      },
+      "reach": {
+        "passed": true,
+        "maximum_tcp_error_m": 0.01858395865977575,
+        "limit_m": 0.025
+      }
+    },
+    "summary": {
+      "status": "complete",
+      "profile": "soft_bend",
+      "grasp_height_above_table_m": 0.018,
+      "record_video": true,
+      "timing_scope": "physics, control and state readback; excludes video only when record_video=false",
+      "script_sha256": "4c8f7f4b9e5fef060e341507290db3a82a779d3116bad4036022da6c661213f3",
+      "contact_sha256": "fbec1911e16a8e21655d396fcd8544a24f784975b4faba13aed969cf9ef03795",
+      "work_surface_top_m": 0.885,
+      "reset_between_independent_tests": true,
+      "fold_status": "not_tested_grasp_only_no_fold_claim",
+      "deployable": false
+    }
+  }
+}

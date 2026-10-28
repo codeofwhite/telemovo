@@ -1,0 +1,2 @@
+# Tested local gateway distribution. Install into a separate existing environment.
+websockets==17.2

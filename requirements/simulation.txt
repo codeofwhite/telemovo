@@ -1,0 +1,4 @@
+# Genesis must be installed from the source commit in patches/manifest.json.
+# Select a compatible GPU PyTorch build first; tested: torch 2.11.0+cu128.
+numpy==2.3.5
+websockets==17.0.1

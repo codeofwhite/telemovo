@@ -1,0 +1,74 @@
+{
+  "spawn_clearance_m": 0.02,
+  "table_top_m": 0.765,
+  "platform": {
+    "height_m": 0.12,
+    "size_xy_m": [
+      0.7,
+      0.5
+    ],
+    "center_xy_m": [
+      0.0,
+      -0.15
+    ],
+    "top_thickness_m": 0.01,
+    "pillar_size_xy_m": [
+      0.08,
+      0.08
+    ]
+  },
+  "control_hz_sim": 50,
+  "input_timeout_s": 0.25,
+  "translation_scale": 0.5,
+  "joint_velocity_rad_s": 0.8,
+  "finger_velocity_m_s": 0.025,
+  "finger_force_n": 5.0,
+  "arm_kp": [
+    4500,
+    4500,
+    3500,
+    3500,
+    2000,
+    2000,
+    1500
+  ],
+  "arm_kv": [
+    180,
+    180,
+    140,
+    140,
+    90,
+    90,
+    70
+  ],
+  "arm_force_nm": [
+    87,
+    87,
+    87,
+    87,
+    12,
+    12,
+    12
+  ],
+  "workspace_lower_m": [
+    -0.65,
+    -0.5,
+    0.765
+  ],
+  "workspace_upper_m": [
+    0.65,
+    0.5,
+    1.5
+  ],
+  "tcp_local_m": [
+    0,
+    0,
+    0.103
+  ],
+  "following_position_limit_m": 0.12,
+  "following_rotation_limit_rad": 0.8,
+  "tracking_jump_m": 0.1,
+  "tracking_jump_rad": 0.35,
+  "dls_damping": 0.04,
+  "static_validation_sim_s": 60
+}

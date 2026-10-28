@@ -1,0 +1,3 @@
+# Optional USD garment export only; not required for viewer or imported OBJ.
+numpy==2.3.5
+usd-core==25.11

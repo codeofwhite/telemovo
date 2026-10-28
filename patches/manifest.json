@@ -1,0 +1,9 @@
+{
+  "upstream": "https://github.com/Genesis-Embodied-AI/genesis-world",
+  "commit": "9727f6e857d8ea6951a30fd761bc489c82e224ec",
+  "distribution_version": "1.3.1",
+  "file": "engine/couplers/legacy_coupler.py",
+  "original_sha256": "29b5778655bca346d74a1f54dff07a5188db22705ea6b384b09c35f202483b9b",
+  "patched_sha256": "fbec1911e16a8e21655d396fcd8544a24f784975b4faba13aed969cf9ef03795",
+  "patch_sha256": "a93637d35faceef460195af1a20be366bbd4995cafa6d848570883c7df052bc8"
+}

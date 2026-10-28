@@ -1,0 +1,98 @@
+--- a/engine/couplers/legacy_coupler.py
++++ b/engine/couplers/legacy_coupler.py
+@@ -39,6 +39,18 @@
+         self.pbd_solver = self.sim.pbd_solver
+         self.fem_solver = self.sim.fem_solver
+         self.sf_solver = self.sim.sf_solver
++
++    def set_pbd_friction_pair(self, geom_idx: int, mu_static: float, mu_kinetic: float) -> None:
++        """Configure one designated rigid geometry for cloth contact, before stepping."""
++        if not self._rigid_pbd:
++            raise ValueError("PBD and rigid coupling must be active")
++        if not 0 <= geom_idx < self.rigid_solver.n_geoms:
++            raise ValueError("Unknown rigid collision geometry")
++        if not np.isfinite([mu_static, mu_kinetic]).all() or not 0 <= mu_kinetic <= mu_static:
++            raise ValueError("Require finite static >= kinetic >= 0")
++        self.pbd_friction_pair_enabled[geom_idx] = 1
++        self.pbd_friction_pair_mu[geom_idx, 0] = mu_static
++        self.pbd_friction_pair_mu[geom_idx, 1] = mu_kinetic
+ 
+     def build(self) -> None:
+         self._rigid_mpm = self.rigid_solver.is_active and self.mpm_solver.is_active and self.options.rigid_mpm
+@@ -77,6 +89,12 @@
+             )
+ 
+         if self._rigid_pbd:
++            # Project-local, optional cloth/table pair override. GPU fields keep
++            # coefficient sweeps on the same kernel without global material edits.
++            self.pbd_friction_pair_enabled = qd.field(gs.qd_int, shape=(self.rigid_solver.n_geoms,))
++            self.pbd_friction_pair_mu = qd.field(gs.qd_float, shape=(self.rigid_solver.n_geoms, 2))
++            self.pbd_friction_pair_enabled.fill(0)
++            self.pbd_friction_pair_mu.fill(0.0)
+             self.pbd_rigid_normal_reordered = qd.Vector.field(
+                 3, dtype=gs.qd_float, shape=(self.pbd_solver.n_particles, self.pbd_solver._B, self.rigid_solver.n_geoms)
+             )
+@@ -841,28 +859,45 @@
+         if signed_dist < self.pbd_solver.particle_size / 2:  # skip non-penetration particles
+             stiffness = 1.0  # value in [0, 1]
+ 
+-            # we don't consider friction for now
+-            # friction = 0.15
+-            # vel_rigid = self.rigid_solver._func_vel_at_point(
+-            #     pos_world=pos_world,
+-            #     link_idx=geoms_info.link_idx[geom_idx],
+-            #     i_b=batch_idx,
+-            #     links_state=links_state,
+-            # )
+-            # rvel = vel - vel_rigid
+-            # rvel_normal_magnitude = rvel.dot(contact_normal)  # negative if inward
+-            # rvel_tan = rvel - rvel_normal_magnitude * contact_normal
+-            # rvel_tan_norm = rvel_tan.norm(gs.EPS)
+-
+-            #################### rigid -> particle ####################
+-
+-            energy_loss = 0.0  # value in [0, 1]
+-            new_pos = pos_world + stiffness * contact_normal * (self.pbd_solver.particle_size / 2 - signed_dist)
++            # Project-local Coulomb contact: positional depenetration is not a bounce impulse.
++            # Friction is bounded by the normal correction and uses moving-rigid relative motion.
++            vel_rigid = self.rigid_solver._func_vel_at_point(
++                pos_world=pos_world, link_idx=geoms_info.link_idx[geom_idx],
++                i_b=batch_idx, links_state=links_state,
++            )
++            dt = self.pbd_solver._substep_dt
++            depth = self.pbd_solver.particle_size / 2 - signed_dist
+             prev_pos = self.pbd_solver.particles_reordered[i, batch_idx].ipos
+-            new_vel = (new_pos - prev_pos) / self.pbd_solver._substep_dt
++            relative_displacement = pos_world - prev_pos - vel_rigid * dt
++            tangent = relative_displacement - contact_normal * relative_displacement.dot(contact_normal)
++            tangent_length = tangent.norm(gs.EPS)
++            mu_static = qd.min(self.pbd_solver.particles_info_reordered[i, batch_idx].mu_s,
++                               geoms_info.coup_friction[geom_idx])
++            mu_kinetic = qd.min(self.pbd_solver.particles_info_reordered[i, batch_idx].mu_k,
++                                geoms_info.coup_friction[geom_idx])
++            if (self.pbd_friction_pair_enabled[geom_idx] != 0
++                    and self.pbd_solver.particles_info_reordered[i, batch_idx].material_type == self.pbd_solver.MATERIAL.CLOTH):
++                mu_static = self.pbd_friction_pair_mu[geom_idx, 0]
++                mu_kinetic = self.pbd_friction_pair_mu[geom_idx, 1]
++            friction_correction = tangent
++            if tangent_length > mu_static * depth:
++                friction_correction = tangent * qd.min(1.0, mu_kinetic * depth / tangent_length)
++            new_pos = pos_world + stiffness * contact_normal * depth - friction_correction
++            relative_velocity = vel - vel_rigid
++            incoming_normal = relative_velocity.dot(contact_normal)
++            # A separating particle retains its physical normal speed. Approaching contact
++            # uses the material restitution (zero here), not depenetration/dt.
++            normal_speed = qd.max(incoming_normal, 0.0) + qd.max(-incoming_normal, 0.0) * geoms_info.coup_restitution[geom_idx]
++            new_vel = vel_rigid + (tangent - friction_correction) / dt + normal_speed * contact_normal
++            energy_loss = 0.0
+ 
+             #################### particle -> rigid ####################
+             delta_mv = mass * (new_vel - vel)
++            # Keep the normal constraint reaction on the rigid body even though
++            # geometric depenetration is excluded from the particle bounce speed.
++            # Use the larger position/velocity normal impulse, not their sum.
++            support_impulse = mass * depth / dt
++            delta_mv += contact_normal * qd.max(0.0, support_impulse - delta_mv.dot(contact_normal))
+             force = (-delta_mv / self.rigid_solver._substep_dt) * (1 - energy_loss)
+ 
+             self.rigid_solver._func_apply_coupling_force(

@@ -1,0 +1,21 @@
+# Local assets, measurements, credentials and isolated third-party runtimes.
+.env
+.env.*
+!.env.example
+.local/
+.runtime/
+.venv/
+outputs/
+cache/
+cache-*/
+__pycache__/
+*.py[cod]
+*.log
+*.pid
+*.tmp
+*.pem
+*.key
+*.crt
+/assets/franka/
+/assets/x5/
+/assets/garment/

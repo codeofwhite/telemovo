@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TeleMovo · PICO 双臂遥操</title><style>
+*{box-sizing:border-box}body{margin:0;background:#101923;color:#edf3f8;font:16px system-ui}header{padding:18px 24px;background:#172635}h1{font-size:22px;margin:0 0 8px}p{margin:8px 0;color:#c0d0df}button{padding:12px 20px;border:0;border-radius:8px;background:#43c4ae;color:#072b27;font:600 16px system-ui;cursor:pointer;margin:8px 8px 8px 0}button:disabled{opacity:.5;cursor:default}#status{padding:12px 24px;min-height:48px;white-space:pre-wrap;background:#1a2c3b}#status.error{background:#682a2a}canvas{display:block;width:100%;height:calc(100vh - 220px);min-height:320px}small{color:#a8c0d2}a{color:#68e0c9}
+select{font:inherit;padding:8px;border-radius:6px;background:#20394b;color:#edf3f8;border:1px solid #537186}select:disabled{opacity:.55}
+</style></head><body><header><h1 id="heading">TeleMovo · 双臂布料 · 只读查看</h1>
+<p id="instructions">双眼立体与头部跟踪由 PICO 本地绘制。衣物来自服务器实时仿真；当前为只读查看，不录制。</p>
+<button id="enter" disabled>进入 VR 查看</button><button id="recenter">重置视角</button><button id="metrics">显示 VR 指标</button>
+<button id="reset" hidden disabled>重置衣物和双臂</button><a id="mode" href="/?teleop=1">切换到遥操</a>
+<div style="margin:10px 0;display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+<label>方向 <select id="inputFrame"><option value="table">桌面坐标：上抬向上，前推向前</option><option value="view">原俯视坐标</option></select></label>
+<label>旋转 <select id="rotationMode"><option value="locked">新手：锁定夹爪朝向</option><option value="free">跟随手腕旋转</option></select></label>
+<label><input id="guidance" type="checkbox" checked> 显示方向与台边指南</label>
+<label>练习 <select id="lesson"><option value="0">1 校准与移动</option><option value="1">2 夹爪开合</option><option value="2">3 接近衣物</option><option value="3">4 双臂配合</option></select></label>
+<span>机器人由当前服务配置决定；切换场景请使用对应网关地址。</span>
+</div>
+<small id="hint">保持自然看前方进入；可转头、探身。双手柄仅显示姿态。</small></header>
+<div id="status">正在连接 Genesis 状态服务…</div><canvas id="scene"></canvas><script src="/viewer.js"></script></body></html>
