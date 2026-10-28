@@ -2,10 +2,20 @@
 
 **WebXR Robot Teleoperation for PICO**
 
+![TeleMovo: PICO VR teleoperation with a dual-arm cloth simulation; IPPLab watermark](docs/assets/telemovo-hero.png)
+
+*AI-generated project illustration based on the simulation scene; not a photograph
+of a validated data-collection session.*
+
 TeleMovo is an experimental browser-based VR teleoperation interface for PICO,
 with immersive visualization, guided bimanual control, and Genesis simulation
 examples for Franka Panda and X5. Open a headset browser, enter VR, and move the
 two simulated arms with your controllers.
+
+We are building toward a simulation data-collection platform: start with immersive
+teleoperation, then contribute reproducible recording, review and dataset export.
+The current release provides the teleoperation foundation; episode recording and
+dataset export remain future work.
 
 [中文](README.zh-CN.md) · [Setup](docs/setup.zh-CN.md) · [Controls](docs/operation.zh-CN.md) · [Architecture](docs/architecture.md) · [Results and limitations](docs/results.zh-CN.md)
 
@@ -73,6 +83,25 @@ also run on the same computer; this deployment has not been revalidated here.
 Use `--dry-run` on either launcher to inspect commands without starting anything.
 Remote simulation through SSH, HTTPS certificates and the read-only viewer are
 documented in [setup](docs/setup.zh-CN.md).
+
+## Build TeleMovo with us
+
+Contributions are welcome, including your first robotics contribution. Help make
+VR teleoperation easier to use and simulation demonstrations easier to reproduce.
+You do not need a PICO or a GPU to improve documentation, CPU tests or setup instructions.
+
+- **Interaction:** clearer controller mapping, clutching, wrist control and operator guidance.
+- **Adapters:** more robot profiles and simulation backends, with explicit validation.
+- **Data collection:** episode recording, success/failure labels, replay, quality checks and LeRobot export.
+- **Reproducibility:** asset preparation, installation fixes and measured headset performance.
+
+[Report a problem or propose an idea](https://github.com/codeofwhite/telemovo/issues/new)
+· [Browse issues](https://github.com/codeofwhite/telemovo/issues)
+· [Contribution guide](CONTRIBUTING.md)
+· [Pull requests](https://github.com/codeofwhite/telemovo/pulls)
+
+Small fixes, failed-test reports and honest operator feedback are valuable too.
+For a substantial change, open an issue first so we can agree on scope and validation.
 
 ## Development checks
 
